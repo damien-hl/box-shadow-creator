@@ -1,0 +1,21 @@
+{
+  "name": "box-shadow-creator",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "@fontsource/fira-code": "^4.5.1",
+    "@fontsource/inter": "^4.5.0",
+    "color-string": "^1.6.0",
+    "vue": "^3.2.3"
+  },
+  "devDependencies": {
+    "@types/color-string": "^1.5.0",
+    "@vitejs/plugin-vue": "^1.4.0",
+    "@vue/compiler-sfc": "^3.2.3",
+    "vite": "^2.5.0"
+  }
+}
