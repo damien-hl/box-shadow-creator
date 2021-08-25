@@ -1,11 +1,11 @@
 <script setup>
 import { ref } from "vue";
-import useLayers from "@/composables/useLayers";
+import useBoxShadow from "@/composables/useBoxShadow";
 import Layer from "@/components/Layer.vue";
 import Preview from "@/components/Preview.vue";
 import Quote from "@/components/Quote.vue";
 
-const { layers, visibleLayers, addLayer, deleteLayer } = useLayers();
+const { layers, visibleLayers, addLayer, deleteLayer } = useBoxShadow();
 
 const aside = ref(null);
 
@@ -73,7 +73,7 @@ const scrollToLayer = (layer) => {
   --clr-primary: hsl(215, 65%, 53%);
   --clr-secondary: hsl(191, 100%, 50%);
   --clr-black: hsl(0, 0%, 0%);
-  --clr-dark: hsl(0, 0%, 5%);
+  --clr-dark: hsl(227, 56%, 8%);
   --clr-medium: hsl(0, 0%, 50%);
   --clr-light: hsl(0, 0%, 97%);
   --clr-white: hsl(0, 0%, 100%);
@@ -260,10 +260,7 @@ aside {
   opacity: 0;
 }
 
-.fade-enter-active {
-  transition: opacity 200ms ease;
-}
-
+.fade-enter-active,
 .fade-leave-active {
   transition: opacity 100ms ease;
 }

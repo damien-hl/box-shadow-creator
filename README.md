@@ -4,7 +4,7 @@
 
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/made-with-vue.svg)](https://forthebadge.com)
 
-![Box Shadow Creator logo](./docs/box-shadow-creator-logo.png)
+![Box Shadow Creator logo](./public/box-shadow-creator-cover.png)
 
 ## Frameworks utilisés
 

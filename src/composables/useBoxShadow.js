@@ -1,53 +1,59 @@
-import { computed, ref } from "vue";
+import { computed, reactive, ref } from "vue";
 import { hexToRgb } from "@/utils/color";
 import { rawToUnit } from "@/utils/unit";
 
-const layers = ref([
-  {
-    id: Date.now(),
-    name: "layer #1",
-    x: "0",
-    y: "8",
-    blur: "10",
-    spread: "1",
-    color: "#000000",
-    opacity: "0.14",
-    visible: true,
-  },
-  {
-    id: Date.now() + 1,
-    name: "layer #2",
-    x: "0",
-    y: "3",
-    blur: "14",
-    spread: "2",
-    color: "#000000",
-    opacity: "0.12",
-    visible: true,
-  },
-  {
-    id: Date.now() + 2,
-    name: "layer #3",
-    x: "0",
-    y: "5",
-    blur: "5",
-    spread: "-3",
-    color: "#000000",
-    opacity: "0.2",
-    visible: true,
-  },
-]);
+const boxShadow = reactive({
+  id: Date.now(),
+  name: "My box shadow #1",
+  layers: [
+    {
+      id: Date.now(),
+      name: "layer #1",
+      x: "0",
+      y: "8",
+      blur: "10",
+      spread: "1",
+      color: "#000000",
+      opacity: "0.14",
+      visible: true,
+    },
+    {
+      id: Date.now() + 1,
+      name: "layer #2",
+      x: "0",
+      y: "3",
+      blur: "14",
+      spread: "2",
+      color: "#000000",
+      opacity: "0.12",
+      visible: true,
+    },
+    {
+      id: Date.now() + 2,
+      name: "layer #3",
+      x: "0",
+      y: "5",
+      blur: "5",
+      spread: "-3",
+      color: "#000000",
+      opacity: "0.2",
+      visible: true,
+    },
+  ],
+});
 
 /**
  *
- * @function useLayers
+ * @function useBoxShadow
  *
  * Composable for the box shadow layers
  *
  * @returns {object} Public ref and methods
  */
-export default function useLayers() {
-  const count = ref(layers.length);
+export default function useBoxShadow() {
+  const layers = computed(() => boxShadow.layers);
+
+  const count = ref(layers.value.length);
 
   const visibleLayers = computed(() =>
     layers.value.filter((layer) => layer.visible)
@@ -82,8 +88,8 @@ export default function useLayers() {
       visible: true,
     }
   ) => {
-    layers.value = [
-      ...layers.value,
+    boxShadow.layers = [
+      ...boxShadow.layers,
       {
         id: Date.now(),
         name: `layer #${++count.value}`,
@@ -102,8 +108,15 @@ export default function useLayers() {
    * @returns {void}
    */
   const deleteLayer = (id) => {
-    layers.value = [...layers.value.filter((layer) => layer.id !== id)];
+    boxShadow.layers = [...boxShadow.layers.filter((layer) => layer.id !== id)];
   };
 
-  return { layers, visibleLayers, layersStyle, addLayer, deleteLayer };
+  return {
+    boxShadow,
+    layers,
+    visibleLayers,
+    layersStyle,
+    addLayer,
+    deleteLayer,
+  };
 }

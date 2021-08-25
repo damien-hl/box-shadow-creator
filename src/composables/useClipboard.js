@@ -1,6 +1,6 @@
 import { onMounted, ref } from "vue";
 
-const isSupported = ref(false);
+const clipboardSupported = ref(null);
 
 /**
  *
@@ -16,7 +16,7 @@ export default function useClipboard() {
       name: "clipboard-write",
     });
 
-    isSupported.value = state === "granted";
+    clipboardSupported.value = state === "granted";
   });
 
   /**
@@ -32,5 +32,5 @@ export default function useClipboard() {
     await navigator.clipboard.writeText(text);
   };
 
-  return { isSupported, copyText };
+  return { clipboardSupported, copyText };
 }

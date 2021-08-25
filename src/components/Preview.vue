@@ -1,13 +1,13 @@
 <script setup>
 import { computed, ref } from "vue";
-import useLayers from "@/composables/useLayers";
+import useBoxShadow from "@/composables/useBoxShadow";
 import useClipboard from "@/composables/useClipboard";
 
-const { layersStyle } = useLayers();
+const { boxShadow, layersStyle } = useBoxShadow();
 
 const boxShadowStyle = computed(() => layersStyle.value.join(", "));
 
-const { isSupported, copyText } = useClipboard();
+const { clipboardSupported, copyText } = useClipboard();
 
 const copied = ref(false);
 
@@ -27,13 +27,18 @@ const copyToClipboard = async (e) => {
 
 <template>
   <div class="preview">
+    <div class="preview-header">
+      <label for="box-shadow" class="field">
+        <input v-model="boxShadow.name" type="text" id="box-shadow" />
+      </label>
+    </div>
     <div class="preview-body">
       <div class="property"><code>box-shadow:</code></div>
       <div class="value">
         <span>
           <span v-for="(layer, index) in layersStyle" :key="layer + index">
             <code>{{ layer }}</code>
-            <br v-if="index !== layersStyle.length - 1" />
+            <code v-if="index !== layersStyle.length - 1">,<br /></code>
             <code v-else>;</code>
           </span>
         </span>
@@ -43,7 +48,7 @@ const copyToClipboard = async (e) => {
       <button
         @click="copyToClipboard"
         class="button"
-        :class="{ disabled: !isSupported }"
+        :class="{ disabled: !clipboardSupported }"
       >
         <span class="label">Copy to clipboard</span>
         <span class="icon">
@@ -58,12 +63,14 @@ const copyToClipboard = async (e) => {
 </template>
 
 <style scoped>
+/*------------------------------------*\
+  # PREVIEW
+\*------------------------------------*/
 .preview {
-  padding: 1rem;
   width: 100%;
   max-width: 500px;
   height: 100%;
-  max-height: 300px;
+  max-height: 350px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -73,7 +80,46 @@ const copyToClipboard = async (e) => {
   transition: box-shadow 200ms;
 }
 
+/*------------------------------------*\
+  # PREVIEW > HEADER
+\*------------------------------------*/
+.preview-header {
+  margin-top: 1.5rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  display: flex;
+  align-items: center;
+}
+
+.preview-header .field {
+  flex: 1;
+  display: block;
+  line-height: 32px;
+}
+
+.preview-header input {
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border: none;
+  background-color: transparent;
+  font-size: 20px;
+  line-height: inherit;
+  font-weight: 700;
+  font-variation-settings: "wght" 700;
+  color: var(--clr-dark);
+}
+
+.preview-header input:focus {
+  outline: none;
+}
+
+/*------------------------------------*\
+  # PREVIEW > BODY
+\*------------------------------------*/
 .preview-body {
+  margin: 1.5rem 2rem;
   padding: 1rem;
   flex: 1;
   border-radius: 6px;
@@ -97,8 +143,13 @@ const copyToClipboard = async (e) => {
   line-height: 24px;
 }
 
+/*------------------------------------*\
+  # PREVIEW > FOOTER
+\*------------------------------------*/
 .preview-footer {
-  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
 .preview-footer .button {
@@ -149,8 +200,6 @@ const copyToClipboard = async (e) => {
 
 .preview-footer .icon {
   margin-left: 0.5rem;
-  overflow: hidden;
-  transition: all 200ms;
 }
 
 .preview-footer .button:hover {
@@ -166,7 +215,7 @@ const copyToClipboard = async (e) => {
 }
 
 /*------------------------------------*\
-  # ASIDE > SCROLLBAR SUPPORT
+  # PREVIEW > SCROLLBAR SUPPORT
 \*------------------------------------*/
 @supports (scrollbar-width: thin) {
   .preview-body {
@@ -190,7 +239,7 @@ const copyToClipboard = async (e) => {
 }
 
 /*------------------------------------*\
-  # FONT SUPPORT
+  # CODE FONT SUPPORT
 \*------------------------------------*/
 @supports (font-variation-settings: "wght" 400) {
   .preview code {

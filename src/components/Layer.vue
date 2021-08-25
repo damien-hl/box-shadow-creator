@@ -120,10 +120,6 @@ onMounted(() => {
   padding: 1rem;
 }
 
-.layer:hover .layer-header {
-  background-position: right center;
-}
-
 .layer.disabled .layer-body {
   opacity: 0.5;
   pointer-events: none;
@@ -147,7 +143,6 @@ onMounted(() => {
     var(--clr-secondary) 100%
   );
   background-size: 200% auto;
-  transition: background-position 200ms;
 }
 
 .layer-header .field {
