@@ -9,6 +9,8 @@ const { layers, visibleLayers, addLayer, deleteLayer } = useBoxShadow();
 
 const aside = ref(null);
 
+const backgroundColor = ref("#ffffff");
+
 /**
  * @function scrollToLayer
  *
@@ -29,40 +31,57 @@ const scrollToLayer = (layer) => {
 </script>
 
 <template>
-  <header></header>
-  <main>
-    <div class="main-content">
-      <transition name="fade" mode="out-in">
-        <Preview v-if="visibleLayers.length" />
-        <Quote v-else />
-      </transition>
-    </div>
-  </main>
-  <aside>
-    <div class="aside-header">
-      <button @click="addLayer()" class="button">
-        <span class="label">Add shadow layer</span>
-        <span class="icon"><Icon name="add" /></span>
-      </button>
-    </div>
-    <div ref="aside" class="aside-body">
-      <transition name="switch" mode="out-in">
-        <div v-if="layers.length" class="layers">
-          <transition-group name="layer">
-            <Layer
-              v-for="layer in layers"
-              :key="layer.id"
-              :layer="layer"
-              @added="scrollToLayer"
-              @delete="deleteLayer"
-            />
-          </transition-group>
-        </div>
-        <p v-else class="message">Click <em>Add shadow layer</em> to start</p>
-      </transition>
-    </div>
-  </aside>
-  <footer></footer>
+  <div class="layout">
+    <header>
+      <a href="/" class="header-home-link">
+        <span class="title">Box Shadow</span>
+        <span class="subtitle">Creator</span>
+      </a>
+    </header>
+    <main>
+      <div class="main-content">
+        <transition name="fade" mode="out-in">
+          <Preview v-if="visibleLayers.length" />
+          <Quote v-else />
+        </transition>
+      </div>
+    </main>
+    <aside>
+      <div class="aside-header">
+        <button @click="addLayer()" class="button">
+          <span class="label">Add shadow layer</span>
+          <span class="icon"><Icon name="add" /></span>
+        </button>
+      </div>
+      <div ref="aside" class="aside-body">
+        <transition name="switch" mode="out-in">
+          <div v-if="layers.length" class="layers">
+            <transition-group name="layer">
+              <Layer
+                v-for="layer in layers"
+                :key="layer.id"
+                :layer="layer"
+                @added="scrollToLayer"
+                @delete="deleteLayer"
+              />
+            </transition-group>
+          </div>
+          <p v-else class="message">Click <em>Add shadow layer</em> to start</p>
+        </transition>
+      </div>
+    </aside>
+    <footer>
+      <label for="background" class="footer-field">
+        <span class="label">background</span>
+        <input
+          v-model="backgroundColor"
+          type="color"
+          name="background"
+          id="background"
+        />
+      </label>
+    </footer>
+  </div>
 </template>
 
 <style>
@@ -73,40 +92,86 @@ const scrollToLayer = (layer) => {
   --clr-primary: hsl(215, 65%, 53%);
   --clr-secondary: hsl(191, 100%, 50%);
   --clr-black: hsl(0, 0%, 0%);
+  --clr-darker: hsl(0, 0%, 10%);
   --clr-dark: hsl(227, 56%, 8%);
   --clr-medium: hsl(0, 0%, 50%);
   --clr-light: hsl(0, 0%, 97%);
+  --clr-lighter: hsl(0, 0%, 90%);
   --clr-white: hsl(0, 0%, 100%);
 }
 
 /*------------------------------------*\
-  # APP
+  # LAYOUT
 \*------------------------------------*/
-#app {
+.layout {
   min-height: 100vh;
   display: grid;
   color: var(--clr-dark);
+  background-color: var(--clr-light);
 }
 
-#app > header {
+.layout > header {
   grid-area: header;
 }
 
-#app > main {
+.layout > main {
   grid-area: main;
 }
 
-#app > aside {
+.layout > aside {
   grid-area: aside;
 }
 
-#app > footer {
+.layout > footer {
   grid-area: footer;
+}
+
+/*------------------------------------*\
+  # HEADER
+\*------------------------------------*/
+header {
+  display: flex;
+  align-items: center;
+  background-color: var(--clr-light);
+}
+
+.header-home-link {
+  text-decoration: none;
+}
+
+.header-home-link .title {
+  font-size: 16px;
+  line-height: 16px;
+  font-weight: 700;
+  font-variation-settings: "wght" 700;
+  color: var(--clr-dark);
+  background: var(--clr-primary);
+  background: linear-gradient(
+    to right,
+    var(--clr-secondary) 0%,
+    var(--clr-primary) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.header-home-link .subtitle {
+  margin-left: 0.25rem;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 300;
+  font-variation-settings: "wght" 300;
+  color: var(--clr-darker);
 }
 
 /*------------------------------------*\
   # MAIN
 \*------------------------------------*/
+main {
+  background-color: v-bind(backgroundColor);
+}
+
 main .main-content {
   padding: 2rem;
   height: 100%;
@@ -216,6 +281,39 @@ aside {
 }
 
 /*------------------------------------*\
+  # FOOTER
+\*------------------------------------*/
+footer {
+  display: flex;
+  align-items: center;
+  background-color: var(--clr-light);
+}
+
+.footer-field {
+  display: inline-block;
+  position: relative;
+  text-decoration: none;
+  font-size: 12px;
+  line-height: 16px;
+  cursor: pointer;
+}
+
+.footer-field .label {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 300;
+  font-variation-settings: "wght" 300;
+  color: var(--clr-darker);
+}
+
+.footer-field input {
+  visibility: hidden;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+/*------------------------------------*\
   # VUE ANIMATIONS
 \*------------------------------------*/
 .layer-enter-from {
@@ -293,13 +391,13 @@ aside {
   # FONT SUPPORT
 \*------------------------------------*/
 @supports (font-variation-settings: "wght" 400) {
-  #app {
+  .layout {
     font-family: InterVariable, sans-serif;
   }
 }
 
 @supports not (font-variation-settings: "wght" 400) {
-  #app {
+  .layout {
     font-family: Inter, sans-serif;
   }
 }
@@ -309,11 +407,11 @@ aside {
 \*------------------------------------*/
 @media (max-width: 767.98px) {
   /*------------------------------------*\
-    # APP
+    # LAYOUT
   \*------------------------------------*/
-  #app {
+  .layout {
     grid-template-columns: 1fr;
-    grid-template-rows: 48px 1fr 400px 48px;
+    grid-template-rows: 32px 1fr 400px 32px;
     grid-template-areas:
       "header"
       "main"
@@ -322,20 +420,36 @@ aside {
   }
 
   /*------------------------------------*\
+    # HEADER
+  \*------------------------------------*/
+  header {
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--clr-lighter);
+  }
+
+  /*------------------------------------*\
     # ASIDE > BODY
   \*------------------------------------*/
   .aside-body {
     height: calc(400px - 3.5rem);
   }
+
+  /*------------------------------------*\
+    # FOOTER
+  \*------------------------------------*/
+  footer {
+    padding: 0.5rem 1rem;
+    border-top: 1px solid var(--clr-lighter);
+  }
 }
 
 @media (min-width: 768px) {
   /*------------------------------------*\
-    # APP
+    # LAYOUT
   \*------------------------------------*/
-  #app {
+  .layout {
     grid-template-columns: 1fr 400px;
-    grid-template-rows: 48px 1fr 48px;
+    grid-template-rows: 32px 1fr 32px;
     grid-template-areas:
       "header aside"
       "main aside"
@@ -343,10 +457,34 @@ aside {
   }
 
   /*------------------------------------*\
+    # HEADER
+  \*------------------------------------*/
+  header {
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--clr-lighter);
+  }
+
+  /*------------------------------------*\
+    # MAIN
+  \*------------------------------------*/
+  main {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border: 1px solid var(--clr-lighter);
+  }
+
+  /*------------------------------------*\
     # ASIDE > BODY
   \*------------------------------------*/
   .aside-body {
     height: calc(100vh - 3.5rem);
+  }
+
+  /*------------------------------------*\
+    # FOOTER
+  \*------------------------------------*/
+  footer {
+    padding: 0.5rem 2rem;
   }
 }
 </style>
